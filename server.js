@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+const moviesRouter = require("./api/movies");
+app.use("/movies", moviesRouter);
 const users = [{ name: "Pepe", id: 0 }, { name: "Juan", id: 1 }];
 
 app.get("/", (req, res) => {
