@@ -1,4 +1,17 @@
-const express=require('express');
-const app=express();
-app.get('/',(req,res)=>res.send('Hello World'));
-app.listen(3000, () => console.log('Ready on port 3000!'));
+const express = require("express");
+const app = express();
+const users = [{ name: "Pepe", id: 0 }, { name: "Juan", id: 1 }];
+app.get("/", (req, res) => {
+  res.send("Hola");
+});
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.get("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const user = users.find(user => user.id == userId);
+  res.json(user);
+});
+
+app.listen(3000, () => console.log("Ready on port 3000!"));
