@@ -1,4 +1,5 @@
 const express = require("express");
+
 const app = express();
 app.use(express.json());
 const moviesRouter = require("./api/movies");
@@ -53,4 +54,4 @@ app.get("/dice/:facenumber", (req, res) => {
   }
 });
 
-app.listen(3002, () => console.log("Ready on port 3001!"));
+app.listen(3000, () => console.log("Ready on port 3000!"));

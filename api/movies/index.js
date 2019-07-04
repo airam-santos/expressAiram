@@ -1,17 +1,17 @@
 const express = require("express");
-var router = express.Router();
-var movies = loadMovies();
+const fs = require("fs");
+const router = express.Router();
+const movies = require("./db.json"); //Carga el fichero solo cuando se arranca el servidor.
 const app = express();
 app.use(express.json());
 
-function loadMovies() {
-  const movies = [
-    { title: "Star Wars", id: 1 },
-    { title: "El Señor de los Anillos", id: 2 },
-    { title: "Harry Potter", id: 3 }
-  ];
-  return movies;
+function saveMovies() {
+  fs.writeFile("./api/movies/db.json", JSON.stringify(movies), function(err) {
+    if (err) throw err;
+    console.log("Saved!");
+  });
 }
+
 router.get("/", (req, res) => {
   //Gets all movies.
   res.json(movies);
@@ -46,6 +46,7 @@ router.post("/newmovie", (req, res) => {
     newMovie.id = movies[movies.length - 1].id + 1;
     movies.push(newMovie);
     res.json(newMovie);
+    saveMovies();
   }
 });
 
@@ -66,6 +67,7 @@ router.put("/update/:id", (req, res) => {
       const movieToInsert = { ...oldMovie, ...newMovie, id };
       movies[position] = movieToInsert;
       res.json(movies[position]);
+      saveMovies();
     }
   }
 });
@@ -75,6 +77,7 @@ router.delete("/:id", (req, res) => {
   movies.slice(movieIndex, 1);
   // Con lodash:_.remove(movies, movie);   Buscar manera de hacerlo.
   res.json({ message: "OK" });
+  saveMovies();
 });
 
 router.put("/like/:id", (req, res) => {
@@ -91,5 +94,7 @@ router.put("/like/:id", (req, res) => {
     movie.likes = movie.likes + 1;
     res.json(movies[position]);
   }
+  saveMovies();
 });
+
 module.exports = router;
