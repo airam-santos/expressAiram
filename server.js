@@ -1,9 +1,33 @@
 const express = require("express");
-
-const app = express();
+const app = require("express")();
 app.use(express.json());
 const moviesRouter = require("./api/movies");
 app.use("/movies", moviesRouter);
+const methodOverride = require("method-override");
+const notifier = require("node-notifier");
+
+function errorHandler(err, req, res, next) {
+  if (!err) {
+    return next();
+  }
+  const message = `Error en ${req.method} ${req.url}`;
+  notifier.notify({ title: "Error", message });
+  res.status(500).send("Algo se ha roto");
+}
+
+app.use(methodOverride());
+app.use(errorHandler);
+
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5 // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use(limiter);
+
 const users = [{ name: "Pepe", id: 0 }, { name: "Juan", id: 1 }];
 
 app.get("/", (req, res) => {
@@ -54,4 +78,4 @@ app.get("/dice/:facenumber", (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Ready on port 3000!"));
+app.listen(3003, () => console.log("Ready on port 3003!"));
