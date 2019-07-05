@@ -1,9 +1,35 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
-const movies = require("./db.json"); //Carga el fichero solo cuando se arranca el servidor.
+//const movies = require("./db.json"); //Carga el fichero solo cuando se arranca el servidor.
 const app = express();
 app.use(express.json());
+
+const MongoClient = require("mongodb").MongoClient;
+const url = "mongodb://localhost:27017/";
+
+/*MongoClient.connect(url, function(err, db) {
+  console.log("Connected");
+  db.close();
+});*/
+MongoClient.connect("mongodb://localhost:27017", (err, client) => {
+  // Client returned
+  let db = client.db("movies");
+});
+
+let movies = [{}];
+
+MongoClient.connect("mongodb://localhost", function(err, client) {
+  if (err) throw err;
+
+  db = client.db("movies");
+
+  db.collection("movies").find({}, function(findErr, result) {
+    if (findErr) throw findErr;
+    movies.push(result);
+    client.close();
+  });
+});
 
 function saveMovies() {
   fs.writeFile("./api/movies/db.json", JSON.stringify(movies), function(err) {
