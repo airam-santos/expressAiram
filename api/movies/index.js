@@ -74,8 +74,8 @@ router.put("/update/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
   const movieIndex = movies.findIndex(movie => movie.id == id);
-  movies.slice(movieIndex, 1);
-  // Con lodash:_.remove(movies, movie);   Buscar manera de hacerlo.
+  //movies.slice(movieIndex, 1);
+  _.remove(movies, movie);
   res.json({ message: "OK" });
   saveMovies();
 });
@@ -92,6 +92,28 @@ router.put("/like/:id", (req, res) => {
     res.json(movies[position]);
   } else {
     movie.likes = movie.likes + 1;
+    res.json(movies[position]);
+  }
+  saveMovies();
+});
+
+router.put("/dislike/:id", (req, res) => {
+  //Removes like from movie.
+  const id = req.params.id;
+  const movie = movies.find(movie => movie.id == id);
+  const position = movies.findIndex(movie => movie.id == id);
+  if (movie.likes == undefined) {
+    const likes = 0;
+    const movieToInsert = { ...movie, likes };
+    movies[position] = movieToInsert;
+    res.json(movies[position]);
+  } else {
+    if (movie.likes < 1) {
+      movie.likes = 0;
+    } else {
+      movie.likes = movie.likes - 1;
+    }
+
     res.json(movies[position]);
   }
   saveMovies();
