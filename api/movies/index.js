@@ -101,7 +101,7 @@ router.delete("/:id", (req, res) => {
   const id = req.params.id;
   const movieIndex = movies.findIndex(movie => movie.id == id);
   //movies.slice(movieIndex, 1);
-  _.remove(movies, movie);
+  delete movies[movieIndex];
   res.json({ message: "OK" });
   saveMovies();
 });
