@@ -1,17 +1,12 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
-//const movies = require("./db.json"); //Carga el fichero solo cuando se arranca el servidor.
 const app = express();
 app.use(express.json());
 
 const MongoClient = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
 
-/*MongoClient.connect(url, function(err, db) {
-  console.log("Connected");
-  db.close();
-});*/
 MongoClient.connect("mongodb://localhost:27017", (err, client) => {
   // Client returned
   let db = client.db("movies");
@@ -100,7 +95,6 @@ router.put("/update/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
   const movieIndex = movies.findIndex(movie => movie.id == id);
-  //movies.slice(movieIndex, 1);
   delete movies[movieIndex];
   res.json({ message: "OK" });
   saveMovies();

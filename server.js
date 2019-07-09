@@ -78,4 +78,4 @@ app.get("/dice/:facenumber", (req, res) => {
   }
 });
 
-app.listen(3003, () => console.log("Ready on port 3002!"));
+app.listen(3000, () => console.log("Ready on port 3000!"));
