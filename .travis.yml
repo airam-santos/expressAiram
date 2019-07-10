@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - stable
+branches:
+  only:
+    - gh-pages
+
+script:
+  - npm i
+  - npm run dev
+deploy:
+  local_dir: gh-pages
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: build_gh
